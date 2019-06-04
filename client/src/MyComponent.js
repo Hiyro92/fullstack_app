@@ -28,6 +28,7 @@ class MyComponent extends React.Component {
     }
 
     render(){
+                
         if(this.state.error){
             return <div>Error: {this.state.error}</div>
         }else if(!this.state.isLoaded){
@@ -37,7 +38,8 @@ class MyComponent extends React.Component {
                 <ul>
                     {this.state.items.map(item => (
                         <li key={item.name}>
-                            <p></p>
+                            <p>{item.name}</p>
+                            <p>{item.price}</p>
                         </li>
                     ))}
                 </ul>

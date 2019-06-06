@@ -1,5 +1,5 @@
 const express = require('express');
-const { check } = require('express-validator/check')
+const { check, validationResult } = require('express-validator/check')
 var cors = require('cors');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
@@ -18,7 +18,7 @@ const items = [
 ]
 
 const validation = [
-    check('name').isLength({ min: 3 }),
+    check('name').isLength({ min: 3 }).isFloat(),
     check('email').isEmail(),
     check('age').isNumeric()
 ]
@@ -32,14 +32,17 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(morgan('dev'));
 
-app.get("/getItems",(req,res) => {
+app.get("/getItems", (req, res) => {
     res.status(200)
     res.json(items)
 })
 
-app.post("/getItems",validation,(req,res) =>{
-    res.status(404)
-    res.send("asd");
+app.post("/getItems", validation, (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(422).json({ errors: errors.array() });
+    }
+    return res.status(200)
 })
 
 

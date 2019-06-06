@@ -1,8 +1,9 @@
 import React from "react"
+import InputForm from './InputForm.js'
 import axios from "axios"
 
 class MyComponent extends React.Component {
-    constructor(props){
+    constructor(props) {
         super(props);
         this.state = {
             error: null,
@@ -11,7 +12,11 @@ class MyComponent extends React.Component {
         }
     }
 
-    componentDidMount(){
+    componentDidMount() {
+        this.getUsers()
+    }
+
+    getUsers() {
         axios.get("/getItems")
             .then(res => {
                 this.setState({
@@ -27,22 +32,26 @@ class MyComponent extends React.Component {
             })
     }
 
-    render(){
-                
-        if(this.state.error){
+
+    render() {
+
+        if (this.state.error) {
             return <div>Error: {this.state.error}</div>
-        }else if(!this.state.isLoaded){
+        } else if (!this.state.isLoaded) {
             return <div>Loading...</div>
-        }else{
-            return(
-                <ul>
-                    {this.state.items.map(item => (
-                        <li key={item.name}>
-                            <p>{item.name}</p>
-                            <p>{item.price}</p>
-                        </li>
-                    ))}
-                </ul>
+        } else {
+            return (
+                <div>
+                    <ul>
+                        {this.state.items.map(item => (
+                            <li key={item.name}>
+                                <p>{item.name}</p>
+                                <p>{item.price}</p>
+                            </li>
+                        ))}
+                    </ul>
+                    <InputForm />
+                </div>
             )
         }
 

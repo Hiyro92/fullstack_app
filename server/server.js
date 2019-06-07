@@ -24,16 +24,18 @@ app.use(bodyParser.json());
 app.use(morgan('dev'));
 
 app.get("/getItems", (req, res) => {
-    res.status(200)
-    res.json(items)
+    setTimeout(() => {
+        res.status(200)
+        res.json(items)
+    }, 5000)
 })
 
 app.post("/users", [
-    check('name').isLength({min:5}),
-    check('password').isLength({min:5})
+    check('name').isLength({ min: 5 }),
+    check('password').isLength({ min: 5 })
 ], (req, res) => {
     console.log(req.body);
-    
+
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return res.status(422).json({ errors: errors.array() });

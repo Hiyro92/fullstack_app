@@ -1,6 +1,8 @@
 import React from "react"
 import InputForm from './InputForm.js'
 import axios from "axios"
+import Card from 'react-bootstrap/Card';
+import Spinner from 'react-bootstrap/Spinner';
 
 class MyComponent extends React.Component {
     constructor(props) {
@@ -36,22 +38,24 @@ class MyComponent extends React.Component {
     render() {
 
         if (this.state.error) {
-            return <div>Error: {this.state.error}</div>
+            return (
+                <Spinner animation="border" role="status">
+                    <span className="sr-only">Loading...</span>
+                </Spinner>
+            )
         } else if (!this.state.isLoaded) {
-            return <div>Loading...</div>
+            return (
+                <Spinner animation="border" variant="secondary" size="lg"/>
+            )
         } else {
             return (
-                <div>
-                    <ul>
-                        {this.state.items.map(item => (
-                            <li key={item.name}>
-                                <p>{item.name}</p>
-                                <p>{item.price}</p>
-                            </li>
-                        ))}
-                    </ul>
-                    <InputForm />
-                </div>
+                <Card>
+                    <Card.Header><strong>BENUTZER</strong></Card.Header>
+                    <Card.Body>
+                        <Card.Title>XXX</Card.Title>
+                    </Card.Body>
+
+                </Card>
             )
         }
     }

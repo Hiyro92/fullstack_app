@@ -54,9 +54,6 @@ class MyComponent extends React.Component {
                 </div>
             )
         }
-
-
-        return <h1>hallo</h1>
     }
 }
 

@@ -17,17 +17,8 @@ const items = [
     }
 ]
 
-const validation = [
-    check('name').isLength({ min: 3 }).isFloat(),
-    check('email').isEmail(),
-    check('age').isNumeric()
-]
-
 const app = express();
 app.use(cors());
-
-// (optional) only made for logging and
-// bodyParser, parses the request body to be a readable json format
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(morgan('dev'));
@@ -37,11 +28,17 @@ app.get("/getItems", (req, res) => {
     res.json(items)
 })
 
-app.post("/getItems", validation, (req, res) => {
+app.post("/users", [
+    check('name').isLength({min:5}),
+    check('password').isLength({min:5})
+], (req, res) => {
+    console.log(req.body);
+    
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return res.status(422).json({ errors: errors.array() });
     }
+    res.json(req.json)
     return res.status(200)
 })
 

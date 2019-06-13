@@ -1,49 +1,45 @@
-const express = require('express');
-const { check, validationResult } = require('express-validator/check')
-var cors = require('cors');
-const bodyParser = require('body-parser');
-const morgan = require('morgan');
+const express = require("express")
+const morgan = require("morgan")
+const bodyParser = require("body-parser")
+const mongoose = require("mongoose")
 
-const API_PORT = 3001;
+const app = express()
 
-const items = [
-    {
-        name: 'Haus',
-        price: 123
-    },
-    {
-        name: 'Pool',
-        price: 321
-    }
-]
+app.use(morgan("dev"))
+app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.json())
 
-const app = express();
-app.use(cors());
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
-app.use(morgan('dev'));
+app.use(express.static(__dirname + '/public'))
 
-app.get("/getItems", (req, res) => {
-    setTimeout(() => {
-        res.status(200)
-        res.json(items)
-    }, 5000)
+mongoose.set('useNewUrlParser', true);
+mongoose.set('useFindAndModify', false);
+mongoose.set('useCreateIndex', true);
+mongoose.set("debug", true)
+
+mongoose.connect("mongodb://localhost/Users")
+
+require("./models/user")
+
+app.use(require('./routes'))
+
+app.use((req, res, next) => {
+    const err = new Error('Not Found');
+    err.status = 404;
+    next(err);
+});
+
+app.use(function (err, req, res, next) {
+    res.status(err.status || 500);
+
+    res.json({
+        'errors': {
+            message: err.message,
+            error: err
+        }
+    });
+});
+
+
+const server = app.listen(process.env.PORT || 3000, () => {
+    console.log(`LISTENING ON PORT ${server.address().port}`);
 })
-
-app.post("/users", [
-    check('name').isLength({ min: 5 }),
-    check('password').isLength({ min: 5 })
-], (req, res) => {
-    console.log(req.body);
-
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        return res.status(422).json({ errors: errors.array() });
-    }
-    res.json(req.json)
-    return res.status(200)
-})
-
-
-// launch our backend into a port
-app.listen(API_PORT, () => console.log(`LISTENING ON PORT ${API_PORT}`));

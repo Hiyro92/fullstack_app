@@ -39,13 +39,13 @@ class MyComponent extends React.Component {
 
         if (this.state.error) {
             return (
-                <Spinner animation="border" role="status">
+                <Spinner animation="border" role="status" className="col">
                     <span className="sr-only">Loading...</span>
                 </Spinner>
             )
         } else if (!this.state.isLoaded) {
             return (
-                <Spinner animation="border" variant="secondary" size="lg"/>
+                <Spinner animation="border" variant="secondary" size="lg" className="col"/>
             )
         } else {
             return (
